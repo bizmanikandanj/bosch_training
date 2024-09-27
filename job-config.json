@@ -1,5 +1,5 @@
 {
-  "name": "CD pipeline",
+  "name": "CD pipeline1",
   "existing_cluster_id": "your_cluster_id",
   "timeout_seconds": 1200,
   "max_retries": 3,
