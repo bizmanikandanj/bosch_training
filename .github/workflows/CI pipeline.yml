@@ -1,10 +1,7 @@
-name: CI Pipeline for Azure Databricks
+name: CD Pipeline for Azure Databricks
 
 on:
  push:
-   branches:
-     - main
- pull_request:
    branches:
      - main
 
@@ -22,8 +19,7 @@ jobs:
        python-version: '3.x'
 
    - name: Install Databricks CLI
-     run: |
-       pip install databricks-cli
+     run: pip install databricks-cli
 
    - name: Configure Databricks CLI
      run: |
@@ -31,6 +27,14 @@ jobs:
        ${{ secrets.DATABRICKS_HOST }}
        ${{ secrets.DATABRICKS_TOKEN }}
        EOF
+   - name: Upload Notebook to DBFS
+     run: databricks fs cp /Workspace/Users/manikandan.jambukesan@gmail.com/Devops --overwrite
+     env:
+       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
-   - name: Download Sample Data from DBFS
-     run: databricks fs cp dbfs:/FileStore/sample_sales.csv . --overwrite
+   - name: Run Databricks Job
+     run: |
+       databricks jobs create --json-file job-config.json
+       databricks jobs run-now --job-id $(databricks jobs list | grep 'CD pipeline' | awk '{print $1}')
+     env:
+       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
