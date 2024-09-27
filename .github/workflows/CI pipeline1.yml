@@ -37,4 +37,4 @@ jobs:
        databricks jobs create --json-file job-config.json
        databricks jobs run-now --job-id $(databricks jobs list | grep 'CD pipeline' | awk '{print $1}')
      env:
-       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+       DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }} 
